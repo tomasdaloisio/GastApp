@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Expense {
+  ID             BigInt       @id @default(autoincrement())
+  Description    String?      @db.VarChar
+  Price          Float?
+  Date           DateTime?    @db.Date
+  ID_ExpenseType BigInt?
+  CreationDate   DateTime     @default(now()) @db.Timestamptz(6)
+  CreationUser   String?      @db.VarChar
+  ExpenseType    ExpenseType? @relation(fields: [ID_ExpenseType], references: [ID_ExpenseType], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ExpenseType {
+  ID_ExpenseType BigInt    @id @default(autoincrement())
+  Description    BigInt?
+  CreationDate   DateTime  @default(now()) @db.Timestamptz(6)
+  CreationUser   String?   @db.VarChar
+  Expense        Expense[]
+}
